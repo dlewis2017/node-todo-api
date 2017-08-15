@@ -41,7 +41,7 @@ app.get('/todos/:id', (req, res) => {
   var id = req.params.id;
   //validate id
   if (!ObjectID.isValid(id)) {
-    res.status(404).send({});
+    return res.status(404).send({});
   }
   Todo.findById(id).then((todo) => {
     //might not return todo so check if it exists
@@ -50,10 +50,27 @@ app.get('/todos/:id', (req, res) => {
     }
     res.send({todo});
   }).catch((error) => {
-      res.status(400).send();
+      res.status(400).send({});
   });
 });
 
+/* Delete Todo By Id*/
+app.delete('/todos/:id', (req,res) => {
+  var id = req.params.id;
+
+  if (!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }
+
+  Todo.findByIdAndRemove(id).then((todo) => {
+    if(!todo){
+      return res.status(404).send({});
+    }
+    res.send({todo});
+  }).catch((error) => {
+    res.status(400).send({});
+  });
+});
 
 
 /* port */
