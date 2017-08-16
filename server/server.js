@@ -8,6 +8,7 @@ const {ObjectID} = require('mongodb');
 var {mongoose} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
+var {authenticate} = require('./middleware/authenticate');
 
 var app = express();
 //local host or Heroku
@@ -117,6 +118,11 @@ app.post('/users', (req, res) => {
   }).catch((error) => {
     res.status(400).send(error);
   });
+});
+
+/* get current user */
+app.get('/users/me', authenticate, (req,res) => {
+  res.send(req.user);
 });
 
 /* port */
